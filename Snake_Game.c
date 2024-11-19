@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <math.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +12,13 @@
 #define FPS          60
 #define SNAKE_SIZE   20
 #define COUNT        5
+
+float Vector2_distance(Vector2 v1, Vector2 v2)
+{
+    float result = sqrtf((v1.x - v2.x)*(v1.x - v2.x) + (v1.y - v2.y)*(v1.y - v2.y));
+
+    return result;
+}
 
 void Food_Spawn(){
     //SetRandomSeed(FPS-10);
@@ -68,7 +77,7 @@ void Draw_Snake(Vector2 head){
         .x=SNAKE_SIZE,
         .y=SNAKE_SIZE
     };
-    DrawRectangleV(head, snake_size, RED);
+    DrawRectangleV(head, snake_size, GREEN);
 
 }
 
@@ -106,51 +115,129 @@ int Snakes_collision_with_down_border(Snake* head){
     }
 }
 
-
+int Snake_collision_with_itself_up(Snake** snakes,float speed){
+    assert(COUNT>4 && "Snake could not collide with itself because it's too small" );
+     Vector2  next_pos= {snakes[0]->position.x,(snakes[0]->position.y - SNAKE_SIZE)*speed};
+    for(int k=2;k<COUNT;k++){
+        float dist=Vector2_distance(next_pos, snakes[k]->position );
+        if (dist < EPS){
+            printf("YOU LOST\n");
+            printf("collided with up [dist:%f] [EPS:%f]\n", dist,EPS);
+            return 1;
+        }
+}
+    // the snake did not collide with itself
+    return 0;
+}
+int Snake_collision_with_itself_down(Snake** snakes,float speed){
+    assert(COUNT>4 && "Snake could not collide with itself because it's too small" );
+     Vector2 next_pos= {snakes[0]->position.x,(snakes[0]->position.y + SNAKE_SIZE)*speed};
+    for(int k=2;k<COUNT;k++){
+        float dist=Vector2_distance(next_pos, snakes[k]->position );
+    if (dist < EPS){
+        printf("YOU LOST\n");
+            printf("collided with down [dist:%f] [EPS:%f]\n", dist,EPS);
+            return 1;
+    }
+}
+    // the snake did not collide with itself
+    return 0;
+}
+int Snake_collision_with_itself_left(Snake** snakes,float speed){
+    assert(COUNT>4 && "Snake could not collide with itself because it's too small" );
+     Vector2 next_pos= {(snakes[0]->position.x - SNAKE_SIZE)*speed , snakes[0]->position.y};
+    for(int k=2;k<COUNT;k++){
+    float dist=Vector2_distance(next_pos,snakes[k]->position);
+    if (dist< EPS ){
+        printf("YOU LOST\n");
+            printf("collided with left [dist:%f] [EPS:%f]\n", dist,EPS);
+            return 1;
+    }
+}
+    // the snake did not collide with itself
+    return 0;
+}
+int Snake_collision_with_itself_right(Snake** snakes,float speed){
+    assert(COUNT>4 && "Snake could not collide with itself because it's too small" );
+    Vector2 next_pos= {(snakes[0]->position.x + SNAKE_SIZE)*speed , snakes[0]->position.y};
+    for(int k=2;k<COUNT;k++){
+    float dist=Vector2_distance(next_pos, snakes[k]->position);
+    if (dist<EPS){
+        printf("YOU LOST\n");
+            printf("collided with right [dist:%f] [EPS:%f]\n", dist,EPS);
+            return 1;
+    }
+}
+    // the snake did not collide with itself
+    return 0;
+}
 
 //this function is responsable of the movement of the snake
-void Move_Snakes(Snake** snakes,float speed){
+int Move_Snakes(Snake** snakes,float speed){
     if(IsKeyPressed(KEY_LEFT)){
         Vector2 temp = snakes[0]->position;
         if(!Snakes_collision_with_left_border(snakes[0])){
+            // the snake did not go through the left border
         snakes[0]->position.x=(snakes[0]->position.x - SNAKE_SIZE)*speed;
+            //Check wether the snake did collide with itself
+            if(Snake_collision_with_itself_left(snakes,speed)) return 0;
         }
         for(int i=1;i<COUNT;i++){
             Vector2 temp2 = snakes[i]->position;
             snakes[i]->position=temp;
             temp= temp2;
         }
-    }if(IsKeyPressed(KEY_RIGHT)){
+        return 1;
+    }
+
+    if(IsKeyPressed(KEY_RIGHT)){
         Vector2 temp = snakes[0]->position;
         if(!Snakes_collision_with_right_border(snakes[0])){
-        snakes[0]->position.x=(snakes[0]->position.x + SNAKE_SIZE)*speed;
+            // the snake did not go through the right border
+            snakes[0]->position.x=(snakes[0]->position.x + SNAKE_SIZE)*speed;
+            //Check wether the snake did collide with itself
+            if(Snake_collision_with_itself_right(snakes,speed)) return 0;
         }
         for(int i=1;i<COUNT;i++){
             Vector2 temp2 = snakes[i]->position;
             snakes[i]->position=temp;
             temp= temp2;
         }
-    }if(IsKeyPressed(KEY_DOWN)){
+        return 1;
+    }
+
+    if(IsKeyPressed(KEY_DOWN)){
         Vector2 temp = snakes[0]->position;
         if (!Snakes_collision_with_down_border(snakes[0])){
-        snakes[0]->position.y=(snakes[0]->position.y + SNAKE_SIZE)*speed;
-    }
+            // the snake did not go through the down border
+            snakes[0]->position.y=(snakes[0]->position.y + SNAKE_SIZE)*speed;
+            //Check wether the snake did collide with itself
+            if(Snake_collision_with_itself_down(snakes,speed)) return 0;
+        }
         for(int i=1;i<COUNT;i++){
             Vector2 temp2 = snakes[i]->position;
             snakes[i]->position=temp;
             temp= temp2;
         }
-    }if(IsKeyPressed(KEY_UP)){
+        return 1;
+    }
+
+    if(IsKeyPressed(KEY_UP)){
         Vector2 temp = snakes[0]->position;
         if (!Snakes_collision_with_up_border(snakes[0])){
-        snakes[0]->position.y=(snakes[0]->position.y - SNAKE_SIZE)*speed;
+            // the snake did not go through the up border
+            snakes[0]->position.y=(snakes[0]->position.y - SNAKE_SIZE)*speed;
+            //Check wether the snake did collide with itself
+            if(Snake_collision_with_itself_up(snakes,speed)) return 0;
         }
         for(int i=1;i<COUNT;i++){
             Vector2 temp2 = snakes[i]->position;
             snakes[i]->position=temp;
             temp= temp2;
         }
+        return 1;
     }
+    return 1;
 }
 
 
@@ -168,16 +255,20 @@ int main(void){
         snakes[i]->position.y= snakes[i-1]->position.y ;
     }
     float deltaTime =1.0f;
+     int snake_is_alive=1;
 
     while(!WindowShouldClose()){
         BeginDrawing();
+        ClearBackground(BLACK);
+        if(snake_is_alive){
         for(int i=0;i<COUNT;i++){
             Draw_Snake(snakes[i]->position);
         }
+        snake_is_alive = Move_Snakes(snakes, deltaTime) ;
         print_snakes(snakes);
-        //Move_Snake(snakes[0],deltaTime );
-        Move_Snakes(snakes, deltaTime);
-        ClearBackground(BLACK);
+        }else{
+        DrawText("YOU LOST",GetScreenWidth()/4.0, GetScreenHeight()/2.0,90 , RED);
+        }
         //Food_Spawn();
         EndDrawing();
     }
