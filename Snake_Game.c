@@ -26,6 +26,7 @@ typedef struct Snake{
     Vector2 position;
 }Snake;
 
+//allocating the snake in memmory
 Snake** alloc_snake(size_t count){
     Snake** snakes=(Snake**)malloc(sizeof(Snake*)*COUNT);
     if (snakes==NULL) {
@@ -43,6 +44,7 @@ Snake** alloc_snake(size_t count){
 
     return snakes;
 }
+//free the memmory
 void free_snake(Snake** snakes,size_t count){
     for(size_t i=0;i<count;i++){
         free(snakes[i]);
@@ -51,6 +53,7 @@ void free_snake(Snake** snakes,size_t count){
     free(snakes);
     snakes=NULL;
 }
+//this function is for logging
 void print_snakes(Snake** snakes){
     printf("----------------------------------\n");
     for(int i=0;i<COUNT;i++){
@@ -58,6 +61,7 @@ void print_snakes(Snake** snakes){
     }
     printf("----------------------------------\n");
 }
+
 
 void Draw_Snake(Vector2 head){
     Vector2 snake_size= {
@@ -104,6 +108,7 @@ int Snakes_collision_with_down_border(Snake* head){
 
 
 
+//this function is responsable of the movement of the snake
 void Move_Snakes(Snake** snakes,float speed){
     if(IsKeyPressed(KEY_LEFT)){
         Vector2 temp = snakes[0]->position;
@@ -151,14 +156,15 @@ void Move_Snakes(Snake** snakes,float speed){
 
 int main(void){
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);// resize the window
     InitWindow(SCREEN_WIDTH,SCREEN_HEIGT, "SNAKE GAME");
     SetTargetFPS(FPS);
     Snake **snakes= alloc_snake(COUNT);
+    //initializing the snake object
     Vector2 init=(Vector2){.x=GetScreenWidth()/2.0,.y=GetScreenHeight()/2.0};
     snakes[0]->position=init;
     for(int i=1;i<COUNT;i++){
-        snakes[i]->position.x= snakes[i-1]->position.x + 2*SNAKE_SIZE;
+        snakes[i]->position.x= snakes[i-1]->position.x + SNAKE_SIZE;
         snakes[i]->position.y= snakes[i-1]->position.y ;
     }
     float deltaTime =1.0f;
