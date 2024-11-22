@@ -182,6 +182,7 @@ int Snake_collision_with_itself_right(Snake** snakes,float dt){
 
 //this function is responsable of the movement of the snake
 DIRECTION* Move_Snakes(Snake** snakes,DIRECTION* direction,Vector2* next_pos,float dt){
+    Vector2 previous_pos;
     if(IsKeyPressed(KEY_LEFT)){
         *direction=DIR_LEFT;
 
@@ -208,11 +209,11 @@ DIRECTION* Move_Snakes(Snake** snakes,DIRECTION* direction,Vector2* next_pos,flo
                         (*next_pos).x=(*next_pos).x -  SNAKE_SIZE/dt;
                         //(*next_pos).y=snakes[0]->position.y;
                     };
-                   Vector2 previous_pos= snakes[0]->position;
-                    snakes[0]->position=(*next_pos);
+                    previous_pos= snakes[0]->position;
+                    snakes[0]->position=*next_pos;
                     for(int i=1;i<COUNT;i++){
                         Vector2 tmp= snakes[i]->position;
-                        snakes[i]->position.x=previous_pos.x ;
+                        snakes[i]->position.x=previous_pos.x  ;
                         snakes[i]->position.y=previous_pos.y ;
                         previous_pos=tmp;
                     }
@@ -227,11 +228,15 @@ DIRECTION* Move_Snakes(Snake** snakes,DIRECTION* direction,Vector2* next_pos,flo
                         (*next_pos).x=(*next_pos).x +  SNAKE_SIZE/dt;
                         //(*next_pos).y=snakes[0]->position.y;
                     };
+
+                    previous_pos= snakes[0]->position;
                     snakes[0]->position=(*next_pos);
                     for(int i=1;i<COUNT;i++){
-                        snakes[i]->position.x=snakes[0]->position.x+(i*SNAKE_SIZE);
-                        snakes[i]->position.y=snakes[0]->position.y;
-                    }
+                        Vector2 tmp= snakes[i]->position;
+                        snakes[i]->position.x=previous_pos.x  ;
+                        snakes[i]->position.y=previous_pos.y ;
+                        previous_pos=tmp;
+            };
                     break;
                 //Snake moving to the down
                 case 2:
@@ -242,11 +247,15 @@ DIRECTION* Move_Snakes(Snake** snakes,DIRECTION* direction,Vector2* next_pos,flo
                         (*next_pos).y=(*next_pos).y +  SNAKE_SIZE/dt;
                         //(*next_pos).y=snakes[0]->position.y;
                     };
-                    snakes[0]->position=*next_pos;
+                    previous_pos= snakes[0]->position;
+                    snakes[0]->position=(*next_pos);
                     for(int i=1;i<COUNT;i++){
-                        snakes[i]->position.x=snakes[0]->position.x;
-                        snakes[i]->position.y=snakes[0]->position.y+(i*SNAKE_SIZE);
-                    }
+                        Vector2 tmp= snakes[i]->position;
+                        snakes[i]->position.x=previous_pos.x  ;
+                        snakes[i]->position.y=previous_pos.y ;
+                        previous_pos=tmp;
+            };
+
                     break;
                 //Snake moving to the up
                 case 3:
@@ -257,11 +266,14 @@ DIRECTION* Move_Snakes(Snake** snakes,DIRECTION* direction,Vector2* next_pos,flo
                         (*next_pos).y=(*next_pos).y -  SNAKE_SIZE/dt;
                         //(*next_pos).y=snakes[0]->position.y;
                     };
-                    snakes[0]->position=*next_pos;
+                    previous_pos= snakes[0]->position;
+                    snakes[0]->position=(*next_pos);
                     for(int i=1;i<COUNT;i++){
-                        snakes[i]->position.x=snakes[0]->position.x;
-                        snakes[i]->position.y=snakes[0]->position.y+(i*SNAKE_SIZE);
-                    }
+                        Vector2 tmp= snakes[i]->position;
+                        snakes[i]->position.x=previous_pos.x  ;
+                        snakes[i]->position.y=previous_pos.y ;
+                        previous_pos=tmp;
+            };
                     break;
 
                 default:
@@ -287,7 +299,8 @@ int main(void){
      DIRECTION direction = DIR_UP;
     int snake_is_alive=1;
 
-    float dt =FPS*0.25*1;
+    float dt =FPS*0.25*0.25*0.25;
+    //float dt =1.0;
     Vector2 next_pos=snakes[0]->position;
     while(!WindowShouldClose()){
         BeginDrawing();
