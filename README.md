@@ -14,6 +14,6 @@ https://github.com/user-attachments/assets/ce25d533-a165-4d87-b36a-7db24d5210de
  [raylib](https://www.raylib.com/)
 
 # License
-Please read the [LICENSE-MIT](https://github.com/ErgeibiMed/SnakeGame/LICENSE.txt) file in this repository for more information.
+Please read the [LICENSE-MIT](https://github.com/ErgeibiMed/SnakeGame/LICENSE) file in this repository for more information.
 
 
