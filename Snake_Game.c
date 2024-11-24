@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +8,7 @@
 #define FOOD_SIZE    10
 #define SNAKE_SIZE   20
 #define COUNT        4
-#define MAX_COUNT    40
+#define MAX_COUNT    100
 
 //Direction of movement
 typedef enum {
@@ -172,6 +173,7 @@ int main(void){
         .y=GetRandomValue(SNAKE_SIZE,GetScreenHeight()-SNAKE_SIZE)};
     Vector2 next_pos=snakes[0]->position;
     while(!WindowShouldClose()){
+         assert(count<MAX_COUNT && "the snake head count is bigger then what was allocated initially");
             if(snake_is_alive){
             direction=*Move_Snakes(snakes, &direction, &next_pos, count);
             food_is_eaten=CheckCollisionPointCircle(

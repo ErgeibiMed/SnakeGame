@@ -3,8 +3,10 @@ CFLAGS:= -Wall -Wextra -Wpedantic -ggdb -O3 -std=c11
 LIBS= -lraylib -lm
 
 all: Snake_Game
-	./Snake_Game
+	$(info INFO : CREATED SNAKE GAME SUCCESSFULLY)
 
+run: Snake_Game
+	./Snake_Game
 Snake_Game: Snake_Game.c
 	$(CC) $(CFLAGS) -o Snake_Game Snake_Game.c $(LIBS)
 
