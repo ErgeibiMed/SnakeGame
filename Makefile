@@ -1,5 +1,5 @@
 CC:= gcc
-CFLAGS:= -Wall -Wextra -Wpedantic -ggdb -O3 -std=c11 -fanalyzer
+CFLAGS:= -Wall -Wextra -Wpedantic -ggdb -O3 -std=c11
 LIBS= -lraylib -lm
 
 all: Snake_Game
