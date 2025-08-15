@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/ce25d533-a165-4d87-b36a-7db24d5210de
 
 
 # Licenses
-### Please read the [LICENSE-MIT](https://github.com/ErgeibiMed/SnakeGame/blob/main/LICENSE) file in this repository for more information.
-### This project uses the [raylib](https://www.raylib.com/) library, which is licensed under the zlib/libpng license. See [LICENSE.raylib](https://github.com/ErgeibiMed/SnakeGame/blob/main/LICENSE.raylib)for full details.
+#### Please read the [LICENSE-MIT](https://github.com/ErgeibiMed/SnakeGame/blob/main/LICENSE) file in this repository for more information.
+#### This project uses the [raylib](https://www.raylib.com/) library.See [LICENSE.raylib](https://github.com/ErgeibiMed/SnakeGame/blob/main/LICENSE.raylib) for full details.
 
 
